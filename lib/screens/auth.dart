@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -12,48 +11,61 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: EdgeInsets.only(
-                  top: 30,
-                  left: 20,
-                  right: 20,
-                  bottom: 20,
+      body: Container(
+        // decoration: BoxDecoration(
+        //   gradient: LinearGradient(
+        //     colors: [
+        //       Theme.of(context).colorScheme.primary,
+        //       Theme.of(context).colorScheme.primary.withOpacity(0.8),
+        //     ],
+        //     begin: Alignment.topLeft,
+        //     end: Alignment.bottomRight,
+        //   ),
+        // ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(
+                    top: 30,
+                    left: 20,
+                    right: 20,
+                    bottom: 20,
+                  ),
+                  width: 100,
+                  // child: Image.asset('assets/images/whatsapp-7466235.svg'),
                 ),
-                width: 200,
-                child: SvgPicture.asset('assets/images/whatsapp-7466235.svg'),
-              ),
-              Card(
-                margin: EdgeInsets.all(20),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Form(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextFormField(
-                            decoration: InputDecoration(labelText: 'Email'),
-                            keyboardType: TextInputType.emailAddress,
-                            autocorrect: false,
-                            textCapitalization: TextCapitalization.none,
-                          ),
-                          TextFormField(
-                            decoration: InputDecoration(labelText: 'Password'),
-                            obscureText: true,
-                          ),
-                        ],
+                Card(
+                  margin: EdgeInsets.all(20),
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Form(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextFormField(
+                              decoration: InputDecoration(labelText: 'Email'),
+                              keyboardType: TextInputType.emailAddress,
+                              autocorrect: false,
+                              textCapitalization: TextCapitalization.none,
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                              ),
+                              obscureText: true,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
