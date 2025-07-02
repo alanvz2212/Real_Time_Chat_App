@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+final _firebaseAuth = FirebaseAuth.instance;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -10,21 +13,57 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   var _isLogin = true;
+  var _enteredEmail = '';
+  var _enteredPassword = '';
 
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
+  void _submit() async {
+    final isValid = _formKey.currentState!.validate();
+
+    if (!isValid) {
+      return;
+    }
+    if (isValid) {
       _formKey.currentState!.save();
-      print(_emailController);
-      print(_passwordController);
-      // Handle login or sign up logic here
-      print('Form submitted successfully');
-    } else {
-      print('Form validation failed');
+      if (_isLogin) {
+        try {
+          final UserCredential = await _firebaseAuth.signInWithEmailAndPassword(
+            email: _enteredEmail,
+            password: _enteredPassword,
+          );
+        } on FirebaseAuthException catch (error) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error.message ?? 'Authentication failed')),
+          );
+        }
+      } else {
+        try {
+          final UserCredential = await _firebaseAuth
+              .createUserWithEmailAndPassword(
+                email: _enteredEmail,
+                password: _enteredPassword,
+              );
+        } on FirebaseAuthException catch (error) {
+          if (error.code == 'email-already-in-use') {
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'This email is already registered. Please use a different email or try logging in.',
+                ),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(error.message ?? 'Authentication failed')),
+            );
+          }
+        }
+      }
     }
   }
 
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +106,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               return null;
                             },
                             onSaved: (value) {
-                              _emailController.text = value!;
+                              _enteredEmail = value!;
                             },
                           ),
                           TextFormField(
@@ -80,7 +119,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               return null;
                             },
                             onSaved: (value) {
-                              _passwordController.text = value!;
+                              _enteredPassword = value!;
                             },
                           ),
                           const SizedBox(height: 12),
